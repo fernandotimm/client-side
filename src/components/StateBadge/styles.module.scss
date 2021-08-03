@@ -3,26 +3,26 @@
 .stateBadge
 {
     border-radius:    4px;
-    font-family:      $fontLight;
+    font-family:      $fontBold;
     font-size:        12px;
     font-weight:      bold;
     width:            auto;
     white-space:      nowrap;
     margin-bottom:    8px;
-    background-color: $colorRedLighter30;
+    background-color: $colorGreen08;
     padding:          10px 15px;
     display:          inline-flex;
     justify-content:  center;
     align-items:      center;
     height:           30px;
     user-select:      none;
-    color:            $colorRed;
+    color:            $colorGreen;
 
     span
     {
         width:            7px;
         height:           7px;
-        background-color: $colorRed;
+        background-color: $colorGreen;
         border-radius:    50%;
         margin-right:     10px;
     }
@@ -35,6 +35,17 @@
         span
         {
             background-color: $colorGreen;
+        }
+    }
+
+    &.canceled
+    {
+        color:            $colorRed;
+        background-color: $colorRed30;
+
+        span
+        {
+            background-color: $colorRed;
         }
     }
 

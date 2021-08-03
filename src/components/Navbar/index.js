@@ -31,6 +31,7 @@ const Navbar = ({
                     setUnread,
                     transactions,
                     fetchLeaderboard,
+                    internal,
                 }) => {
     const [menuOpened, setMenuOpened]               = useState(false);
     const [showLeaderboard, setShowLeaderboard]     = useState(false);
@@ -111,7 +112,10 @@ const Navbar = ({
     };
 
     return (
-        <div className={style.navbar}>
+        <div className={classNames(
+            style.navbar,
+            internal ? style.internal : null,
+            )}>
             <div className={classNames(style.navbarItems, style.hideOnMobile)}>
                 <img
                     src={Logo}
@@ -119,7 +123,8 @@ const Navbar = ({
                     alt={'Wallfair'}
                 />
                 {renderNavbarLink(Routes.home, 'Home')}
-                {renderNavbarLink(Routes.betOverview, 'My Trades')}
+                {renderNavbarLink(Routes.discover, 'Discover')}
+                {renderNavbarLink(Routes.betOverview, 'My Bets')}
                 {renderNavbarLink(Routes.wallet, 'My Wallet')}
             </div>
             <div className={style.navbarItems}>
@@ -128,17 +133,10 @@ const Navbar = ({
                     iconType={IconType.mainMenu}
                     onClick={openMobileMenu}
                 />
-                <div
-                    className={style.ranking}
-                    onClick={onChangeLeaderboard}
-                >
-                    <img
-                        src={medalGold}
-                        alt="medal"
-                        className={style.medal}
-                    />
-                    <p className={style.rankingText}>Rank # {rank}</p>
-                </div>
+                <Icon
+                    className={style.walletIcon}
+                    iconType={IconType.wallet}
+                />
                 <Link
                     to={Routes.wallet}
                     className={style.balanceOverview}
@@ -148,7 +146,7 @@ const Navbar = ({
                     </span>
                     {getBalance()} EVNT
                 </Link>
-                <div
+                {/* <div
                     className={style.notificationOverview}
                     onClick={showNotificationsHandler}
                 >
@@ -163,12 +161,17 @@ const Navbar = ({
                             </p>
                         </div>
                     )}
-                </div>
+                </div> */}
                 <div
                     className={style.profile}
                     style={getProfileStyle()}
                     onClick={showDesktopMenuHandler}
-                ></div>
+                >
+                    <Icon
+                        className={style.arrow}
+                        iconType={IconType.arrowLeft}
+                    />
+                </div>
                 <div
                     className={style.profileMobile}
                     style={getProfileStyle()}

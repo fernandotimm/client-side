@@ -28,5 +28,6 @@ export default {
     walletDeposit:      '/wallet/deposit/:paymentProvider',
     walletWithdrawal:   '/wallet/withdraw/:paymentProvider',
     welcome:            '/',
-    verify:             '/verify'
+    verify:             '/verify',
+    discover:           '/discover'
 };

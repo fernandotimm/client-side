@@ -7,7 +7,7 @@
     background-color: $colorPrimaryDark;
     min-height:       100%;
     color:            $colorWhite;
-    padding:          2rem 3rem;
+    padding:          0 3rem;
     font-family:      $fontLight;
     position:         relative;
 
@@ -17,7 +17,8 @@
     }
 
     .upperLeftOval,
-    .centeredBottomOval
+    .centeredBottomOval,
+    .rightBottomOval
     {
         display:    none;
         position:   absolute;
@@ -42,6 +43,15 @@
             background-image: radial-gradient(circle at 52% 110%, #2df8d5, rgba(45, 248, 213, 0) 60%);
         }
 
+        &.rightBottomOval
+        {
+            bottom:           0;
+            right:            0;
+            width:            30%;
+            height:           80%;
+            background-image: radial-gradient(circle at 120% 70%, #2df8d5, rgba(45, 248, 213, 0) 60%);
+        }
+
         @media (min-width: $screen-sm)
         {
             display: block;
@@ -54,6 +64,7 @@
         flex-direction:  row;
         justify-content: space-between;
         z-index:         1;
+        margin-top:      40px;
 
         > div
         {
@@ -98,6 +109,7 @@
                     {
                         margin-right: 1rem;
                         font-family:  $fontBold;
+                        font-size:    24px;
 
                         @media (max-width: $screen-md)
                         {
@@ -168,8 +180,10 @@
         .columnLeft
         {
             width:           70%;
-            padding-left:    3rem;
+            padding-left:    2rem;
             padding-right:   1rem;
+            padding-top:     1rem;
+            padding-bottom:  2rem;
             display:         flex;
             justify-content: space-between;
             flex-direction:  column;
@@ -218,8 +232,11 @@
             flex-direction:  column;
             justify-content: space-between;
             width:           30%;
-            padding-left:    0;
-            padding-right:   3rem;
+            padding-left:    2rem;
+            padding-right:   2rem;
+            padding-bottom:  4rem;
+            margin: 0 auto;
+            background-color: rgba(172, 196, 255, 0.1);
 
             @media (max-width: $screen-md)
             {
@@ -229,6 +246,17 @@
             > div:first-child
             {
                 flex: 1;
+            }
+
+            & .decreaseIcon {
+                margin: 43px 0 67px;
+                display: flex;
+                justify-content: flex-end;
+
+                & svg * {
+                    transform: scale(0.8);
+                    stroke: $colorGray;
+                }
             }
         }
     }

@@ -9,6 +9,7 @@ import Routes                       from '../../constants/Routes';
 import styles                       from './styles.module.scss';
 import TimeLeftCounter              from 'components/TimeLeftCounter';
 import ViewerBadge                  from 'components/ViewerBadge';
+import HotBetBadge                  from 'components/HotBetBadge';
 import { Carousel }                 from 'react-responsive-carousel';
 import { connect }                  from 'react-redux';
 import { PopupActions }             from '../../store/actions/popup';
@@ -24,8 +25,13 @@ import classNames                   from 'classnames';
 import FixedEventCreationIconButton from '../../components/FixedEventCreationIconButton';
 import { SwiperSlide, Swiper }      from 'swiper/react';
 import React                        from 'react';
+import Navbar from 'components/Navbar';
+import Icon from 'components/Icon';
+import SwitchableHelper from 'helper/SwitchableHelper';
+import SwitchableContainer from 'components/SwitchableContainer';
+import HotBetBadgeTheme from 'components/HotBetBadge/HotBetBadgeTheme';
 
-const Bet = ({ showPopup }) => {
+const Bet = ({ showPopup, user }) => {
           const history                         = useHistory();
           const [swiper, setSwiper]             = useState(null);
           const { eventId }                     = useParams();
@@ -164,44 +170,62 @@ const Bet = ({ showPopup }) => {
               );
           };
 
+          const renderSwitchableView = () => {
+            const switchableViews = [
+                SwitchableHelper.getSwitchableView(
+                    'Stream Chat',
+                ),
+                SwitchableHelper.getSwitchableView(
+                    'Related Trades',
+                ),
+            ];
+
+            return (
+                <SwitchableContainer
+                    className={styles.switchableViewContainer}
+                    whiteBackground={false}
+                    fullWidth={false}
+                    switchableViews={switchableViews}
+                    currentIndex={0}
+                    // setCurrentIndex={setBetView}
+                />
+            );
+        };
+
           if (!event) {
               return null;
           }
 
           return (
               <div className={styles.bet}>
-                  <div className={styles.upperLeftOval}>
+                  {/* <div className={styles.upperLeftOval}>
+                  </div> */}
+                  <div className={styles.rightBottomOval}>
                   </div>
-                  <div className={styles.centeredBottomOval}>
-                  </div>
-                  <div className={styles.headlineContainer}>
-                      <div>
-                          <Link
-                              to={Routes.home}
-                              className={styles.arrowBack}
-                          >
-                          </Link>
-                          <div className={styles.headline}>
-                              <h1>
-                                  {_.get(event, 'name')}
-                              </h1>
-                              <div>
-                                  <LiveBadge />
-                                  <ViewerBadge viewers={1123} />
-                              </div>
-                          </div>
-                      </div>
-                      <div className={styles.logo}>
-                          <div>
-                              <img
-                                  src={darkModeLogo}
-                                  alt="Wallfair"
-                              />
-                          </div>
-                      </div>
-                  </div>
+
                   <div className={styles.row}>
                       <div className={styles.columnLeft}>
+                        <Navbar user={user} internal={true} />
+                        <div className={styles.headlineContainer}>
+                            <div>
+                                <Link
+                                    to={Routes.home}
+                                    className={styles.arrowBack}
+                                >
+                                </Link>
+                                <div className={styles.headline}>
+                                    <h1>
+                                        {_.get(event, 'name')}
+                                    </h1>
+                                    <div>
+                                        <LiveBadge />
+                                        <ViewerBadge viewers={1123} />
+                                        <HotBetBadge theme={HotBetBadgeTheme.whiteOpacity13} label="208.554 EVNT" />
+                                        <HotBetBadge theme={HotBetBadgeTheme.opacity01} label="Hot Event" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                           <div className={styles.streamContainer}>
                               <TwitchEmbedVideo
                                   video={event.streamUrl}
@@ -213,6 +237,7 @@ const Bet = ({ showPopup }) => {
                                   <TimeLeftCounter endDate={new Date(_.get(event, 'endDate'))} />
                               </div>
                           </div>
+                          {renderSwitchableView()}
                           <Chat
                               className={styles.desktopChat}
                               event={event}
@@ -255,13 +280,8 @@ const Bet = ({ showPopup }) => {
                           </div>
                       </div>
                       <div className={styles.columnRight}>
-                          <div>
-                              <BetView
-                                  closed={false}
-                                  showEventEnd={true}
-                              />
-                          </div>
-                          <div className={styles.relatedBets}>
+
+                          {/* <div className={styles.relatedBets}>
                               <div className={styles.headline}>
                                   <h2>🚀 Related Bets</h2>
                                   <LiveBadge />
@@ -277,6 +297,18 @@ const Bet = ({ showPopup }) => {
                               >
                                   {renderRelatedBetSliders()}
                               </Carousel>
+                          </div> */}
+                          <div>
+                            <Icon
+                                className={styles.decreaseIcon}
+                                iconType={IconType.arrow}
+                                // onClick={}
+                            />
+
+                            <BetView
+                                closed={false}
+                                showEventEnd={true}
+                            />
                           </div>
                       </div>
                   </div>
@@ -294,6 +326,12 @@ const Bet = ({ showPopup }) => {
       }
 ;
 
+const mapStateToProps = (state) => {
+    return {
+        user: state.authentication,
+    };
+};
+
 const mapDispatchToProps = (dispatch) => {
           return {
               showPopup: (popupType) => {
@@ -304,6 +342,6 @@ const mapDispatchToProps = (dispatch) => {
 ;
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
 )(Bet);

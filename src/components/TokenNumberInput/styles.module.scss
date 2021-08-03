@@ -19,12 +19,14 @@
     {
         width:            50%;
         font-family:      $fontBold;
-        font-size:        16px;
-        text-align:       right;
+        font-size:        24px;
+        text-align:       center;
         background-color: transparent;
         border:           none;
         outline:          none !important;
-        margin-right:     11px;
+        flex:             1 1;
+        // margin-right:     10px;
+        min-width:        0;
 
         &::-webkit-inner-spin-button
         {
@@ -38,8 +40,8 @@
     .eventTokenLabel
     {
         color:       $colorGrayLight2;
-        font-family: $fontBold;
-        font-size:   16px;
+        font-family: $fontRegular;
+        font-size:   20px;
     }
 }
 

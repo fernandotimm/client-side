@@ -4,7 +4,7 @@ import HotBetBadgeTheme from './HotBetBadgeTheme';
 import classNames       from 'classnames';
 import SelectionHelper  from '../../helper/SelectionHelper';
 
-const HotBetBadge = ({ className, theme = HotBetBadgeTheme.opacity01 }) => {
+const HotBetBadge = ({ className, theme = HotBetBadgeTheme.opacity01, label = "Hot Trade" }) => {
     return (
         <div
             className={classNames(
@@ -14,12 +14,13 @@ const HotBetBadge = ({ className, theme = HotBetBadgeTheme.opacity01 }) => {
                     {
                         [HotBetBadgeTheme.opacity01]: styles.hotBetBadge01,
                         [HotBetBadgeTheme.opacity04]: styles.hotBetBadge04,
+                        [HotBetBadgeTheme.whiteOpacity13]: styles.hotBetBadgeWhite13,
                     },
                 ),
                 className,
             )}
         >
-            🔥 Hot Trade
+            🔥 {label}
         </div>
     );
 };

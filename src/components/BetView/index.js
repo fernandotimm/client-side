@@ -496,7 +496,7 @@ const BetView = ({
                     disabled={tradeButtonDisabled}
                     disabledWithOverlay={false}
                 >
-                    Trade
+                    TRADE!
                 </Button>
             );
         }
@@ -597,7 +597,6 @@ const BetView = ({
                     isPopup ? styles.popupMenuContainer : null,
                 )}
             >
-                {renderCurrentBalance()}
                 {renderMenu()}
             </div>
         );
@@ -628,6 +627,7 @@ const BetView = ({
         return (
             <div className={styles.menu}>
                 <Icon
+                    className={styles.menuIcon}
                     iconType={IconType.menu}
                     iconTheme={null}
                     onClick={() => setMenuOpened(!menuOpened)}
@@ -657,19 +657,6 @@ const BetView = ({
                         </span>
                     </div>
                 </div>
-            </div>
-        );
-    };
-
-    const renderCurrentBalance = () => {
-        return (
-            <div className={classNames(styles.currentBalanceContainer)}>
-                <Icon
-                    className={styles.currentBalanceIcon}
-                    iconTheme={IconTheme.primaryLightTransparent}
-                    iconType={IconType.wallet2}
-                />
-                {formatToFixed(balance)}
             </div>
         );
     };
@@ -781,26 +768,30 @@ const BetView = ({
                 styles[state + 'Status'],
             )}
         >
-            <div className={styles.placeBetContainer}>
+            <div className={classNames(
+                styles.placeBetContainer,
+                showEventEnd ? styles.hasTimeLeftCounter : null,
+            )}>
                 {renderLoadingAnimation()}
                 {renderMenuContainerWithCurrentBalance()}
                 <span className={styles.eventName}>{event.name}</span>
                 <div className={styles.betMarketQuestion}>
                     {bet.marketQuestion}
                 </div>
-                <div className={styles.description}>{bet.description}</div>
                 <StateBadge state={state} />
                 {renderStateConditionalContent()}
-                {
-                    showEventEnd && (
-                        <div className={styles.timeLeftCounterContainer}>
-                            <span>End of Trade:</span>
-                            <TimeLeftCounter endDate={endDate} />
-                        </div>
-                    )
-                }
+
             </div>
+            {
+                showEventEnd && (
+                    <div className={styles.timeLeftCounterContainer}>
+                        <span>End of Trade:</span>
+                        <TimeLeftCounter endDate={endDate} />
+                    </div>
+                )
+            }
         </div>
+
     );
 };
 
