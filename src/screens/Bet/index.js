@@ -21,7 +21,6 @@ import BetView                      from '../../components/BetView';
 import RelatedBetCard               from '../../components/RelatedBetCard';
 import { useHistory }               from 'react-router-dom';
 import Chat                         from '../../components/Chat';
-import classNames                   from 'classnames';
 import FixedEventCreationIconButton from '../../components/FixedEventCreationIconButton';
 import { SwiperSlide, Swiper }      from 'swiper/react';
 import React                        from 'react';
@@ -32,10 +31,12 @@ import SwitchableContainer from 'components/SwitchableContainer';
 import HotBetBadgeTheme from 'components/HotBetBadge/HotBetBadgeTheme';
 
 const Bet = ({ showPopup, user }) => {
-          const history                         = useHistory();
-          const [swiper, setSwiper]             = useState(null);
-          const { eventId }                     = useParams();
-          const [currentSlide, setCurrentSlide] = useState(0);
+          const history                           = useHistory();
+          const [swiper, setSwiper]               = useState(null);
+          const { eventId, betId }                = useParams();
+          const [currentSlide, setCurrentSlide]   = useState(0);
+          const [tradeTabIndex, setTradeTabIndex] = useState(0);
+          const [chatTabIndex, setChatTabIndex] = useState(0);
 
           const event = useSelector(
               (state) => _.find(
@@ -75,10 +76,6 @@ const Bet = ({ showPopup, user }) => {
               return _.get(event, 'bets', []);
           };
 
-          const getRelatedBetSliderPages = () => {
-              return _.ceil(_.size(getRelatedBets()) / 2);
-          };
-
           const renderRelatedBetList = () => {
               return _.map(
                   getRelatedBets(),
@@ -102,17 +99,37 @@ const Bet = ({ showPopup, user }) => {
               };
           };
 
+          const onBackToAllTradesClick = () => {
+            return () => {
+                const eventId = _.get(event, '_id', null);
+
+                history.push(Routes.getRouteWithParameters(
+                    Routes.bet,
+                    {
+                        eventId,
+                        betId: ''
+                    },
+                ));
+            };
+        };
+
           const renderRelatedBetCard = (bet, index) => {
               if (bet) {
                   const betId = _.get(bet, '_id');
+                  const eventId = _.get(event, '_id', null);
 
                   return (
                       <RelatedBetCard
                           key={index}
+                          betId={betId}
+                          eventId={eventId}
                           title={bet.marketQuestion}
+                          eventName={event.name}
+                          endDate={bet.endDate}
                           userId={bet.creator}
-                          image={event.previewImageUrl}
                           onClick={onBetClick(betId)}
+                          showEventEnd={true}
+                          status={bet.status}
                       />
                   );
               }
@@ -120,65 +137,77 @@ const Bet = ({ showPopup, user }) => {
               return <div />;
           };
 
-          const renderRelatedBetSliders = () => {
-              const size = getRelatedBetSliderPages();
+          const renderMyBetCard = (bet, index) => {
+            if (bet) {
+                const betId = _.get(bet, '_id');
+                const eventId = _.get(event, '_id', null);
 
-              return _.map(
-                  _.range(0, size),
-                  (sliderPage, index) => renderRelatedBetSlider(sliderPage, index),
-              );
-          };
+                return (
+                    <RelatedBetCard
+                        key={index}
+                        betId={betId}
+                        eventId={eventId}
+                        title={bet.marketQuestion}
+                        eventName={event.name}
+                        endDate={bet.endDate}
+                        userId={bet.creator}
+                        onClick={onBetClick(betId)}
+                        showEventEnd={true}
+                        status={bet.status}
+                        startPrice={1000} //TODO
+                        prediction={'Wallfair Snail'} //TODO
+                        cashout={'6.000'} //TODO
+                    />
+                );
+            }
 
-          const renderRelatedBetSlider = (pageIndex, index) => {
-              const bets        = getRelatedBets();
-              const firstIndex  = pageIndex * 2;
-              const secondIndex = firstIndex + 1;
+            return <div />;
+        };
 
-              return (
-                  <div
-                      key={index}
-                      className={classNames(
-                          styles.carouselSlide,
-                          styles.relatedBetSlide,
-                      )}
-                  >
-                      {renderRelatedBetCard(
-                          _.get(
-                              bets,
-                              '[' + firstIndex + ']',
-                          ),
-                      )}
-                      {renderRelatedBetCard(
-                          _.get(
-                              bets,
-                              '[' + secondIndex + ']',
-                          ),
-                      )}
-                  </div>
-              );
-          };
+        const renderRelatedBets = () => {
+            const bets = getRelatedBets();
 
-          const renderMobileMenuIndicator = (index) => {
-              return (
-                  <span
-                      className={currentSlide === index ? styles.active : ''}
-                      onClick={() => {
-                          setCurrentSlide(index);
-                      }}
-                  >
-                  </span>
-              );
-          };
+            return (
+                <div>
+                { bets.map((bet, index) => renderRelatedBetCard(bet, index)) }
+                </div>
+            );
+        };
 
-          const renderSwitchableView = () => {
-            const switchableViews = [
-                SwitchableHelper.getSwitchableView(
-                    'Stream Chat',
-                ),
-                SwitchableHelper.getSwitchableView(
-                    'Related Trades',
-                ),
-            ];
+        const renderMyBets = () => {
+            const bets = getRelatedBets();
+
+            return (
+                <div>
+                { bets.map((bet, index) => renderMyBetCard(bet, index)) }
+                </div>
+            );
+        };
+
+        const renderBets = () => {
+            if (tradeTabIndex === 1) {
+                return renderMyBets();
+            }
+
+            return renderRelatedBets();
+        }
+
+        const renderMobileMenuIndicator = (index) => {
+            return (
+                <span
+                    className={currentSlide === index ? styles.active : ''}
+                    onClick={() => {
+                        setCurrentSlide(index);
+                    }}
+                >
+                </span>
+            );
+        };
+
+        const renderSwitchableView = (tabs = [], tabIndexState = 0, tabIndexStateSetter) => {
+            const switchableViews = tabs.map(({name, iconType = null, iconTheme = null}) => {
+                return SwitchableHelper.getSwitchableView(name, iconType, iconTheme);
+            });
 
             return (
                 <SwitchableContainer
@@ -186,8 +215,8 @@ const Bet = ({ showPopup, user }) => {
                     whiteBackground={false}
                     fullWidth={false}
                     switchableViews={switchableViews}
-                    currentIndex={0}
-                    // setCurrentIndex={setBetView}
+                    currentIndex={tabIndexState}
+                    setCurrentIndex={tabIndexStateSetter}
                 />
             );
         };
@@ -237,7 +266,16 @@ const Bet = ({ showPopup, user }) => {
                                   <TimeLeftCounter endDate={new Date(_.get(event, 'endDate'))} />
                               </div>
                           </div>
-                          {renderSwitchableView()}
+                          {
+                            renderSwitchableView(
+                                [
+                                    { name: 'Stream Chat' },
+                                    { name: 'Related Trades' }
+                                ],
+                                chatTabIndex,
+                                setChatTabIndex
+                            )
+                          }
                           <Chat
                               className={styles.desktopChat}
                               event={event}
@@ -281,23 +319,6 @@ const Bet = ({ showPopup, user }) => {
                       </div>
                       <div className={styles.columnRight}>
 
-                          {/* <div className={styles.relatedBets}>
-                              <div className={styles.headline}>
-                                  <h2>🚀 Related Bets</h2>
-                                  <LiveBadge />
-                              </div>
-                              <Carousel
-                                  className={styles.relatedBetsCarousel}
-                                  dynamicHeight={false}
-                                  emulateTouch={true}
-                                  infiniteLoop={true}
-                                  autoPlay={false}
-                                  showArrows={false}
-                                  showStatus={false}
-                              >
-                                  {renderRelatedBetSliders()}
-                              </Carousel>
-                          </div> */}
                           <div>
                             <Icon
                                 className={styles.decreaseIcon}
@@ -305,10 +326,39 @@ const Bet = ({ showPopup, user }) => {
                                 // onClick={}
                             />
 
-                            <BetView
-                                closed={false}
-                                showEventEnd={true}
-                            />
+                            { !betId ? <>
+                                { renderSwitchableView(
+                                    [
+                                        { name: 'Event Trades' },
+                                        { name: 'My Trades' }
+                                    ],
+                                    tradeTabIndex,
+                                    setTradeTabIndex
+                                ) }
+                                <div className={styles.relatedBets}>
+                                    { renderBets() }
+                                </div>
+                            </>
+                            :
+                            <>
+                                <div
+                                    className={styles.backToAllTrades}
+                                    onClick={onBackToAllTradesClick()}
+                                >
+                                    <Icon
+                                        className={styles.backIcon}
+                                        iconType={IconType.arrowSimple}
+                                    />
+                                    <span>Go back to all Trades</span>
+                                </div>
+
+                                <BetView
+                                    closed={false}
+                                    showEventEnd={true}
+                                />
+                            </>
+                            }
+
                           </div>
                       </div>
                   </div>

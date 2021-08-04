@@ -133,18 +133,19 @@ const Navbar = ({
                     iconType={IconType.mainMenu}
                     onClick={openMobileMenu}
                 />
-                <Icon
-                    className={style.walletIcon}
-                    iconType={IconType.wallet}
-                />
+
                 <Link
                     to={Routes.wallet}
                     className={style.balanceOverview}
                 >
+                    <Icon
+                        className={style.walletIcon}
+                        iconType={IconType.wallet}
+                    />
                     <span className={style.actualBalanceText}>
                         Your current Balance
                     </span>
-                    {getBalance()} EVNT
+                    <span className={style.actualBalanceValue}>{getBalance()} EVNT</span>
                 </Link>
                 {/* <div
                     className={style.notificationOverview}

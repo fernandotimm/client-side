@@ -6,6 +6,7 @@ export default {
     arrowDown:       'arrowDown',
     arrowLeft:       'arrowLeft',
     arrowRight:      'arrowRight',
+    arrowSimple:     'arrowSimple',
     arrowSmallDown:  'arrowSmallDown',
     arrowSmallRight: 'arrowSmallRight',
     arrowTopRight:   'arrowTopRight',

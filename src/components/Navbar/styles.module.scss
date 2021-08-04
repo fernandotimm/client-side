@@ -62,17 +62,6 @@
             font-family:     $fontLight;
         }
 
-        .walletIcon
-        {
-            width: auto;
-            padding-right: 10px;
-            z-index: 5;
-
-            & svg path {
-                stroke-width: 0;
-            }
-        }
-
         .ranking
         {
             width:           121px;
@@ -106,6 +95,8 @@
             }
         }
 
+
+
         .balanceOverview
         {
             display:          none;
@@ -119,11 +110,29 @@
             font-size:        16px;
             z-index:          5;
 
+            .walletIcon
+            {
+                display:       none;
+                width:         auto;
+                padding-right: 10px;
+                z-index:       5;
+
+                & svg path {
+                    stroke-width:   0;
+                }
+
+                @media (min-width: $screen-sm)
+                {
+                    display:        block;
+                }
+            }
+
             .actualBalanceText
             {
                 display:     block;
                 font-family: $fontLight;
                 color:       $colorGrayLight2 !important;
+                white-space: nowrap;
 
                 @media (min-width: $screen-sm)
                 {
@@ -131,9 +140,22 @@
                 }
             }
 
-            @media (min-width: $screen-sm)
+            .actualBalanceValue
             {
-                display: block;
+                display:     none;
+                white-space: nowrap;
+
+                @media (min-width: $screen-sm)
+                {
+                    display: block;
+                }
+            }
+
+            @media (min-width: $screen-md)
+            {
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
         }
 
@@ -188,10 +210,11 @@
         {
             height:              50px;
             width:               50px;
+            min-width:           50px;
             border-radius:       50%;
             background-color:    $colorGrayLight;
             margin:              0 0.5rem 0 1.5rem;
-            background-size:     contain;
+            background-size:     cover;
             background-position: center center;
             border:              2px solid $colorWhite;
             cursor:              pointer;

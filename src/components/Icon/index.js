@@ -11,6 +11,7 @@ import { ReactComponent as IconArrow }           from '../../data/icons/arrow.sv
 import { ReactComponent as IconArrowDown }       from '../../data/icons/arrow-down.svg';
 import { ReactComponent as IconArrowLeft }       from '../../data/icons/arrow-left.svg';
 import { ReactComponent as IconArrowRight }      from '../../data/icons/arrow-right.svg';
+import { ReactComponent as IconArrowSimple }     from '../../data/icons/arrow-simple.svg';
 import { ReactComponent as IconArrowSmallDown }  from '../../data/icons/arrow-small-down.svg';
 import { ReactComponent as IconArrowSmallRight } from '../../data/icons/arrow-small-right.svg';
 import { ReactComponent as IconArrowTopRight }   from '../../data/icons/arrow-top-right.svg';
@@ -62,6 +63,7 @@ const Icon = ({ className, iconType, iconTheme = IconTheme.white, circle, width,
                 [IconType.arrowRight]:      <IconArrowRight />,
                 [IconType.arrowSmallDown]:  <IconArrowSmallDown />,
                 [IconType.arrowSmallRight]: <IconArrowSmallRight />,
+                [IconType.arrowSimple]:     <IconArrowSimple />,
                 [IconType.arrowTopRight]:   <IconArrowTopRight />,
                 [IconType.attention]:       <IconAttention />,
                 [IconType.bell]:            <IconBell />,
